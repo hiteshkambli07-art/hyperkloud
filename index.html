@@ -3,295 +3,492 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HyperKloud — People Finder</title>
-<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800&family=Bricolage+Grotesque:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Driftflow — AI SDRs for B2B Sales Teams</title>
+<meta name="description" content="Automatically find, qualify, and hand over ready-to-call active buyers to your SDRs to book more qualified meetings.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#05060a;--surface:#0d0f17;--surface2:#141720;
-  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.12);
-  --text:#eeeef0;--muted:#6b6e82;--dim:#3a3d52;
-  --cyan:#00d4ff;--cyan-d:rgba(0,212,255,0.1);--cyan-g:rgba(0,212,255,0.25);
-  --green:#00e5a0;--green-d:rgba(0,229,160,0.1);
-  --amber:#ffb347;--amber-d:rgba(255,179,71,0.1);
-  --red:#ff4d6a;--red-d:rgba(255,77,106,0.1);
-  --display:'Cabinet Grotesk',system-ui,sans-serif;
-  --body:'Bricolage Grotesque',system-ui,sans-serif;
+  --bg:#f5f3ef;
+  --bg2:#eceae4;
+  --bg3:#e2dfd7;
+  --white:#ffffff;
+  --ink:#1a1814;
+  --ink2:#3d3a34;
+  --ink3:#7a766e;
+  --ink4:#a8a49c;
+  --orange:#e8571a;
+  --orange2:#f07040;
+  --border:#dedad2;
+  --border2:#ccc8be;
+  --card:#ffffff;
+  --sans:'Inter',system-ui,sans-serif;
+  --radius:14px;
 }
-body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.6;min-height:100vh;}
-.header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;gap:12px;}
-.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--cyan),#0088ff);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#000;font-family:var(--display);}
-.logo-name{font-family:var(--display);font-size:17px;font-weight:800;letter-spacing:-0.02em;}
-.logo-name span{color:var(--cyan);}
-.badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;font-family:var(--display);background:rgba(255,100,50,0.15);border:1px solid rgba(255,100,50,0.3);color:#ff6432;margin-left:8px;}
-.page{max-width:780px;margin:0 auto;padding:48px 24px 80px;}
-.hero{text-align:center;margin-bottom:40px;}
-.hero h1{font-family:var(--display);font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:10px;}
-.hero h1 span{color:var(--cyan);}
-.hero p{font-size:15px;color:var(--muted);font-weight:300;}
-.search-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;}
-.search-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
-.field{display:flex;flex-direction:column;gap:5px;}
-label{font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);}
-input{background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--body);font-size:15px;padding:13px 16px;outline:none;transition:all 0.2s;width:100%;}
-input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px var(--cyan-d);}
-input::placeholder{color:var(--dim);}
-.search-btn{width:100%;padding:15px;background:var(--cyan);border:none;border-radius:10px;color:#000;font-family:var(--display);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
-.search-btn:hover:not(:disabled){box-shadow:0 0 32px var(--cyan-g);transform:translateY(-1px);}
-.search-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
-.status{display:none;align-items:center;gap:8px;padding:12px 16px;border-radius:8px;font-size:13px;margin-top:14px;}
-.status.show{display:flex;}
-.status.thinking{background:var(--cyan-d);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);}
-.status.done{background:var(--green-d);border:1px solid rgba(0,229,160,0.2);color:var(--green);}
-.status.error{background:var(--red-d);border:1px solid rgba(255,77,106,0.2);color:var(--red);}
-.status.warning{background:var(--amber-d);border:1px solid rgba(255,179,71,0.2);color:var(--amber);}
-.spinner{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
-@keyframes spin{to{transform:rotate(360deg)}}
-.results-header{display:none;align-items:center;gap:12px;margin-bottom:16px;}
-.results-header.show{display:flex;}
-.results-title{font-family:var(--display);font-size:16px;font-weight:700;}
-.results-count{background:var(--cyan-d);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);font-size:12px;font-weight:600;padding:3px 12px;border-radius:20px;font-family:var(--display);}
-.export-btn{margin-left:auto;background:var(--surface);border:1px solid var(--border2);border-radius:7px;color:var(--muted);cursor:pointer;font-family:var(--display);font-size:12px;font-weight:600;padding:7px 14px;transition:all 0.15s;}
-.export-btn:hover{border-color:var(--cyan);color:var(--cyan);}
-.people-list{display:flex;flex-direction:column;gap:12px;}
-.person-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;display:flex;align-items:center;gap:18px;transition:border-color 0.2s;}
-.person-card:hover{border-color:var(--border2);}
-.person-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:16px;font-weight:700;color:#fff;flex-shrink:0;}
-.person-info{flex:1;min-width:0;}
-.person-name{font-family:var(--display);font-size:15px;font-weight:700;margin-bottom:2px;}
-.person-title{font-size:13px;color:var(--muted);margin-bottom:6px;}
-.person-tags{display:flex;gap:8px;flex-wrap:wrap;}
-.person-tag{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;font-family:var(--display);}
-.tag-email{background:var(--green-d);border:1px solid rgba(0,229,160,0.2);color:var(--green);}
-.tag-company{background:var(--cyan-d);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);}
-.tag-location{background:var(--surface2);border:1px solid var(--border2);color:var(--muted);}
-.tag-noemail{background:var(--amber-d);border:1px solid rgba(255,179,71,0.2);color:var(--amber);}
-.person-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
-.copy-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--muted);cursor:pointer;font-family:var(--display);font-size:11px;font-weight:600;padding:6px 12px;transition:all 0.15s;white-space:nowrap;}
-.copy-btn:hover{border-color:var(--cyan);color:var(--cyan);}
-.copy-btn.linkedin{border-color:rgba(0,119,181,0.3);color:#0077b5;}
-.copy-btn.linkedin:hover{background:rgba(0,119,181,0.1);}
-.no-results{text-align:center;padding:48px 24px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:12px;}
-.no-results h3{font-family:var(--display);font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;}
-.no-results ul{text-align:left;display:inline-block;margin-top:12px;font-size:13px;line-height:2;}
-.tips{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-top:20px;}
-.tips-title{font-family:var(--display);font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
-.tips-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.tip{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;cursor:pointer;transition:border-color 0.15s;}
-.tip:hover{border-color:var(--cyan);}
-.tip-company{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;font-family:var(--display);}
-.tip-title{font-size:12px;color:var(--muted);}
-@media(max-width:600px){
-  .search-row{grid-template-columns:1fr;}
-  .person-card{flex-wrap:wrap;}
-  .person-actions{flex-direction:row;width:100%;}
-  .tips-grid{grid-template-columns:1fr;}
-  .page{padding:28px 14px 60px;}
-  .header{padding:14px 16px;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;overflow-x:hidden;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;align-items:center;padding:0 40px;background:rgba(245,243,239,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-img{width:28px;height:28px;}
+.nav-logo-name{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-0.03em;}
+.nav-links{display:flex;align-items:center;gap:28px;margin-left:40px;}
+.nav-links a{font-size:14px;font-weight:500;color:var(--ink3);text-decoration:none;transition:color 0.15s;}
+.nav-links a:hover{color:var(--ink);}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.btn-sm{font-size:13px;font-weight:600;padding:8px 18px;border-radius:8px;cursor:pointer;border:none;font-family:var(--sans);transition:all 0.15s;}
+.btn-ghost{background:transparent;color:var(--ink2);border:1px solid var(--border2);}
+.btn-ghost:hover{border-color:var(--ink3);color:var(--ink);}
+.btn-dark{background:var(--ink);color:white;}
+.btn-dark:hover{background:#2d2a24;}
+
+/* HERO */
+.hero{padding:120px 40px 80px;max-width:1080px;margin:0 auto;text-align:center;}
+.hero-pills{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:32px;flex-wrap:wrap;}
+.hero-pill{display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:13px;font-weight:500;color:var(--ink3);}
+.hero-pill-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);}
+.hero h1{font-size:clamp(36px,5vw,64px);font-weight:700;letter-spacing:-0.04em;line-height:1.05;color:var(--ink);margin-bottom:24px;max-width:800px;margin-left:auto;margin-right:auto;}
+.hero-sub{font-size:18px;color:var(--ink3);max-width:520px;margin:0 auto 40px;line-height:1.65;font-weight:400;}
+.hero-btns{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+.btn-orange{background:var(--orange);color:white;font-family:var(--sans);font-size:15px;font-weight:600;padding:13px 28px;border-radius:10px;border:none;cursor:pointer;transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;gap:8px;}
+.btn-orange:hover{background:#d14d14;transform:translateY(-1px);}
+.btn-outline-dark{background:transparent;color:var(--ink);font-family:var(--sans);font-size:15px;font-weight:500;padding:13px 24px;border-radius:10px;border:1.5px solid var(--border2);cursor:pointer;transition:all 0.2s;text-decoration:none;}
+.btn-outline-dark:hover{border-color:var(--ink3);}
+
+/* Hero image placeholder — feature cards */
+.hero-visual{max-width:860px;margin:60px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.hero-pill-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:10px;font-size:14px;font-weight:500;color:var(--ink2);}
+.hpc-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+/* SCROLLING LOGOS */
+.logos-wrap{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:28px 0;overflow:hidden;}
+.logos-label{text-align:center;font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:20px;}
+.logos-track{display:flex;gap:60px;animation:scroll 20s linear infinite;width:max-content;}
+@keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.logos-wrap:hover .logos-track{animation-play-state:paused;}
+.logo-name{font-size:16px;font-weight:700;color:var(--ink4);letter-spacing:-0.02em;white-space:nowrap;}
+
+/* WHAT WE DO */
+.section{padding:80px 40px;max-width:1080px;margin:0 auto;}
+.section-label{font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:16px;}
+.section-h2{font-size:clamp(28px,3.5vw,44px);font-weight:700;letter-spacing:-0.03em;line-height:1.1;color:var(--ink);margin-bottom:14px;}
+.section-sub{font-size:16px;color:var(--ink3);max-width:500px;line-height:1.65;}
+
+/* What we do grid */
+.wwd-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:48px;}
+.wwd-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:32px;transition:all 0.2s;}
+.wwd-card:hover{border-color:var(--border2);box-shadow:0 4px 20px rgba(0,0,0,0.06);}
+.wwd-icon{width:48px;height:48px;background:var(--bg2);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+.wwd-icon svg{width:22px;height:22px;stroke:var(--orange);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.wwd-title{font-size:17px;font-weight:600;color:var(--ink);margin-bottom:10px;}
+.wwd-desc{font-size:14px;color:var(--ink3);line-height:1.7;}
+
+/* STATS */
+.stats-band{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:60px 40px;}
+.stats-inner{max-width:1080px;margin:0 auto;}
+.stats-title{font-size:clamp(26px,3vw,38px);font-weight:700;letter-spacing:-0.03em;color:var(--ink);margin-bottom:8px;}
+.stats-sub{font-size:15px;color:var(--ink3);font-style:italic;margin-bottom:48px;}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;}
+.stat-item{}
+.stat-num{font-size:52px;font-weight:700;letter-spacing:-0.04em;color:var(--ink);line-height:1;}
+.stat-label{font-size:14px;color:var(--ink3);margin-top:8px;}
+
+/* SIGNALS */
+.signals-section{padding:80px 40px;max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+.signals-list{margin-top:32px;display:flex;flex-direction:column;gap:12px;}
+.signal-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:20px 22px;transition:all 0.2s;}
+.signal-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.signal-card-title{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.signal-card-desc{font-size:13px;color:var(--ink3);line-height:1.55;}
+.signals-right-title{font-size:clamp(24px,3vw,36px);font-weight:700;letter-spacing:-0.03em;color:var(--ink);margin-bottom:16px;line-height:1.15;}
+.signals-right-sub{font-size:15px;color:var(--ink3);line-height:1.65;margin-bottom:32px;}
+.signal-metrics{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.smetric{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.smetric-num{font-size:32px;font-weight:700;letter-spacing:-0.03em;color:var(--ink);line-height:1;}
+.smetric-label{font-size:12px;color:var(--ink3);margin-top:6px;}
+
+/* OUTCOMES */
+.outcomes{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 40px;}
+.outcomes-inner{max-width:1080px;margin:0 auto;}
+.outcomes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px;}
+.outcome-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:28px;display:flex;align-items:flex-start;gap:14px;}
+.outcome-check{width:32px;height:32px;background:#f0faf5;border:1px solid #b8e8cc;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.outcome-check svg{width:14px;height:14px;stroke:#1a9c5b;fill:none;stroke-width:2.5;}
+.outcome-text{font-size:15px;font-weight:500;color:var(--ink);line-height:1.45;}
+
+/* TIMELINE */
+.timeline{padding:80px 40px;max-width:1080px;margin:0 auto;}
+.timeline-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:48px;}
+.timeline-item{position:relative;}
+.timeline-week{font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);margin-bottom:12px;}
+.timeline-title{font-size:16px;font-weight:600;color:var(--ink);margin-bottom:8px;}
+.timeline-desc{font-size:13px;color:var(--ink3);line-height:1.6;}
+.timeline-line{height:2px;background:var(--border);margin-bottom:24px;position:relative;}
+.timeline-line::before{content:'';width:10px;height:10px;border-radius:50%;background:var(--orange);position:absolute;top:-4px;left:0;}
+
+/* FAQ */
+.faq{padding:80px 40px;max-width:720px;margin:0 auto;}
+.faq-list{margin-top:40px;}
+.faq-item{border-bottom:1px solid var(--border);}
+.faq-q{padding:20px 0;font-size:16px;font-weight:500;color:var(--ink);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;user-select:none;}
+.faq-q:hover{color:var(--orange);}
+.faq-chevron{width:20px;height:20px;flex-shrink:0;transition:transform 0.25s;}
+.faq-chevron svg{width:20px;height:20px;stroke:var(--ink3);fill:none;stroke-width:2;}
+.faq-item.open .faq-chevron{transform:rotate(180deg);}
+.faq-a{font-size:14px;color:var(--ink3);line-height:1.7;max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s;}
+.faq-item.open .faq-a{max-height:300px;padding-bottom:20px;}
+
+/* CTA FOOTER */
+.cta-section{background:var(--ink);padding:100px 40px;text-align:center;}
+.cta-logo{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:32px;}
+.cta-logo-name{font-size:22px;font-weight:700;color:white;letter-spacing:-0.03em;}
+.cta-h2{font-size:clamp(28px,4vw,52px);font-weight:700;letter-spacing:-0.04em;line-height:1.1;color:white;margin-bottom:16px;}
+.cta-sub{font-size:17px;color:rgba(255,255,255,0.5);margin-bottom:40px;}
+.cta-btns{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+.btn-cta-orange{background:var(--orange);color:white;font-family:var(--sans);font-size:15px;font-weight:600;padding:14px 30px;border-radius:10px;border:none;cursor:pointer;transition:all 0.2s;text-decoration:none;}
+.btn-cta-orange:hover{background:var(--orange2);}
+.btn-cta-outline{background:transparent;color:rgba(255,255,255,0.6);font-family:var(--sans);font-size:15px;font-weight:500;padding:14px 24px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.15);cursor:pointer;transition:all 0.2s;text-decoration:none;}
+.btn-cta-outline:hover{border-color:rgba(255,255,255,0.4);color:white;}
+
+/* FOOTER */
+footer{background:var(--ink);border-top:1px solid rgba(255,255,255,0.07);padding:32px 40px;}
+.footer-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-left{font-size:13px;color:rgba(255,255,255,0.3);}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.15s;}
+.footer-links a:hover{color:rgba(255,255,255,0.7);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  .hero{padding:100px 20px 60px;}
+  .hero-visual{grid-template-columns:1fr;}
+  .section{padding:60px 20px;}
+  .wwd-grid{grid-template-columns:1fr;}
+  .stats-band{padding:60px 20px;}
+  .stats-grid{grid-template-columns:1fr 1fr;}
+  .signals-section{grid-template-columns:1fr;gap:40px;padding:60px 20px;}
+  .outcomes{padding:60px 20px;}
+  .outcomes-grid{grid-template-columns:1fr;}
+  .timeline{padding:60px 20px;}
+  .timeline-grid{grid-template-columns:1fr 1fr;}
+  .faq{padding:60px 20px;}
+  .cta-section{padding:60px 20px;}
+  footer{padding:24px 20px;}
 }
 </style>
 </head>
 <body>
-<div class="header">
-  <div class="logo-icon">HK</div>
-  <div class="logo-name">Hyper<span>Kloud</span></div>
-  <span class="badge">People Finder</span>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <!-- Driftflow crystal logo as SVG -->
+    <svg class="nav-logo-img" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,5 90,27 90,73 50,95 10,73 10,27" fill="none" stroke="#1a1814" stroke-width="4"/>
+      <line x1="50" y1="5" x2="50" y2="95" stroke="#1a1814" stroke-width="2"/>
+      <line x1="10" y1="27" x2="90" y2="73" stroke="#1a1814" stroke-width="2"/>
+      <line x1="90" y1="27" x2="10" y2="73" stroke="#1a1814" stroke-width="2"/>
+      <line x1="50" y1="5" x2="10" y2="73" stroke="#1a1814" stroke-width="1.5"/>
+      <line x1="50" y1="5" x2="90" y2="73" stroke="#1a1814" stroke-width="1.5"/>
+      <line x1="10" y1="27" x2="50" y2="95" stroke="#1a1814" stroke-width="1.5"/>
+      <line x1="90" y1="27" x2="50" y2="95" stroke="#1a1814" stroke-width="1.5"/>
+      <line x1="10" y1="27" x2="90" y2="27" stroke="#1a1814" stroke-width="1.5"/>
+      <line x1="10" y1="73" x2="90" y2="73" stroke="#1a1814" stroke-width="1.5"/>
+    </svg>
+    <span class="nav-logo-name">driftflow</span>
+  </a>
+  <div class="nav-links">
+    <a href="#what-we-do">AI SDRs</a>
+    <a href="#how-it-works">How it Works</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn-sm btn-ghost">Log in</button>
+    <button class="btn-sm btn-dark" onclick="window.location.href='/demo'" class="btn-sm btn-dark">Book a Demo</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-pills">
+    <div class="hero-pill"><div class="hero-pill-dot"></div>Prospecting</div>
+    <div class="hero-pill"><div class="hero-pill-dot"></div>Scoring</div>
+    <div class="hero-pill"><div class="hero-pill-dot"></div>Engaging</div>
+  </div>
+  <h1>AI SDRs That Help Human SDRs Spend More Time Making Calls.</h1>
+  <p class="hero-sub">Automatically find, qualify, and hand over ready-to-call active buyers to your SDRs to book more qualified meetings.</p>
+  <div class="hero-btns">
+    <a href="/demo" class="btn-orange">Book a Demo</a>
+    <a href="#what-we-do" class="btn-outline-dark">What's an AI SDR?</a>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-pill-card"><div class="hpc-dot" style="background:#e8571a;"></div>Lead found · Infosys · L&D Head</div>
+    <div class="hero-pill-card"><div class="hpc-dot" style="background:#f0b429;"></div>Email opened · 3× · High intent</div>
+    <div class="hero-pill-card"><div class="hpc-dot" style="background:#1a9c5b;"></div>Ready to call · Score 94/100</div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<div class="logos-wrap">
+  <div class="logos-label">Serving B2B teams across every industry</div>
+  <div class="logos-track">
+    <span class="logo-name">SaaS</span>
+    <span class="logo-name">Fintech</span>
+    <span class="logo-name">EdTech</span>
+    <span class="logo-name">HealthTech</span>
+    <span class="logo-name">B2B Agencies</span>
+    <span class="logo-name">HR Tech</span>
+    <span class="logo-name">MarTech</span>
+    <span class="logo-name">Sales Tech</span>
+    <span class="logo-name">PropTech</span>
+    <span class="logo-name">LegalTech</span>
+    <!-- duplicate for seamless loop -->
+    <span class="logo-name">SaaS</span>
+    <span class="logo-name">Fintech</span>
+    <span class="logo-name">EdTech</span>
+    <span class="logo-name">HealthTech</span>
+    <span class="logo-name">B2B Agencies</span>
+    <span class="logo-name">HR Tech</span>
+    <span class="logo-name">MarTech</span>
+    <span class="logo-name">Sales Tech</span>
+    <span class="logo-name">PropTech</span>
+    <span class="logo-name">LegalTech</span>
+  </div>
 </div>
-<div class="page">
-  <div class="hero">
-    <h1>Find anyone at any<br><span>company instantly</span></h1>
-    <p>Type a company name + job title → get real names, emails, and LinkedIn profiles</p>
-  </div>
-  <div class="search-box">
-    <div class="search-row">
-      <div class="field">
-        <label>Company Name *</label>
-        <input type="text" id="company" placeholder="e.g. Disprz, Notion, Chargebee" />
+
+<!-- WHAT WE DO -->
+<section class="section" id="what-we-do">
+  <div class="section-label">What We Do</div>
+  <div class="section-h2">Are your SDRs at 100% capacity?</div>
+  <div class="section-sub">SDRs spend 70–80% of their day researching, building lists, enriching contacts, and updating the CRM. That time does not book meetings. <strong>Calls do.</strong></div>
+  <div class="wwd-grid">
+    <div class="wwd-card">
+      <div class="wwd-icon">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       </div>
-      <div class="field">
-        <label>Job Title *</label>
-        <input type="text" id="jobTitle" placeholder="e.g. Revenue Operations, VP Sales" />
-      </div>
+      <div class="wwd-title">Prospecting & Enrichment</div>
+      <div class="wwd-desc">Triggers to leads, enriched and synced to your pipeline. We find companies matching your ICP and enrich every contact with signals showing buying intent.</div>
     </div>
-    <button class="search-btn" id="searchBtn" onclick="findPeople()">
-      <span id="searchBtnTxt">Find People</span>
-    </button>
-    <div class="status" id="status">
-      <div class="spinner" id="spinner"></div>
-      <span id="statusTxt"></span>
+    <div class="wwd-card">
+      <div class="wwd-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <div class="wwd-title">Engagement & Touchpoints</div>
+      <div class="wwd-desc">Email and LinkedIn warm targets. Personalised outreach written by AI, sent at the right moment. Engagement updates scores automatically.</div>
+    </div>
+    <div class="wwd-card">
+      <div class="wwd-icon">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="wwd-title">Real Time Scoring</div>
+      <div class="wwd-desc">Score fit, intent, and engagement to rank next calls. Your team always knows who to call first, why now, and what to say when they answer.</div>
+    </div>
+    <div class="wwd-card">
+      <div class="wwd-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      </div>
+      <div class="wwd-title">Task Creation</div>
+      <div class="wwd-desc">CRM tasks, Slack notifications, and more — with the who, why, and what. Your SDR opens their queue and sees exactly who to call today and why.</div>
     </div>
   </div>
-  <div class="results-header" id="resultsHeader">
-    <div class="results-title" id="resultsTitle">Results</div>
-    <div class="results-count" id="resultsCount">0 people</div>
-    <button class="export-btn" onclick="exportCSV()">Export CSV</button>
-  </div>
-  <div class="people-list" id="peopleList"></div>
-  <div class="tips" id="tips">
-    <div class="tips-title">Try these examples</div>
-    <div class="tips-grid">
-      <div class="tip" onclick="prefill('Disprz','Revenue Operations')">
-        <div class="tip-company">Disprz</div>
-        <div class="tip-title">Revenue Operations</div>
+</section>
+
+<!-- STATS -->
+<div class="stats-band">
+  <div class="stats-inner">
+    <div class="stats-title">What our AI SDR tracks & surfaces</div>
+    <div class="stats-sub">Your rep sees a short, clean card: who to call, why now, and what to say.</div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-num">100+</div>
+        <div class="stat-label">Intent Metrics Tracked</div>
       </div>
-      <div class="tip" onclick="prefill('Chargebee','VP of Sales')">
-        <div class="tip-company">Chargebee</div>
-        <div class="tip-title">VP of Sales</div>
+      <div class="stat-item">
+        <div class="stat-num">40+</div>
+        <div class="stat-label">B2B Sales Teams Helped</div>
       </div>
-      <div class="tip" onclick="prefill('Freshworks','Head of Marketing')">
-        <div class="tip-company">Freshworks</div>
-        <div class="tip-title">Head of Marketing</div>
-      </div>
-      <div class="tip" onclick="prefill('Razorpay','Business Development')">
-        <div class="tip-company">Razorpay</div>
-        <div class="tip-title">Business Development</div>
+      <div class="stat-item">
+        <div class="stat-num">25%</div>
+        <div class="stat-label">Average Lift in Meetings</div>
       </div>
     </div>
   </div>
 </div>
-<script>
-let allPeople = [];
-let lastSearch = {};
 
-function prefill(company, title) {
-  document.getElementById('company').value = company;
-  document.getElementById('jobTitle').value = title;
-  findPeople();
-}
-
-function setStatus(type, text) {
-  const el = document.getElementById('status');
-  el.className = 'status show ' + type;
-  document.getElementById('statusTxt').textContent = text;
-  document.getElementById('spinner').style.display = type === 'thinking' ? 'block' : 'none';
-}
-
-function initials(name) {
-  return name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
-}
-
-function avatarColor(name) {
-  const colors = ['#00d4ff','#00e5a0','#ffb347','#a78bfa','#ff6432','#ff4d6a'];
-  return colors[name.charCodeAt(0) % colors.length];
-}
-
-async function findPeople() {
-  const company = document.getElementById('company').value.trim();
-  const jobTitle = document.getElementById('jobTitle').value.trim();
-  if (!company || !jobTitle) {
-    setStatus('error', 'Please enter both company name and job title.');
-    return;
-  }
-  const btn = document.getElementById('searchBtn');
-  btn.disabled = true;
-  document.getElementById('searchBtnTxt').textContent = 'Searching...';
-  document.getElementById('peopleList').innerHTML = '';
-  document.getElementById('resultsHeader').classList.remove('show');
-  document.getElementById('tips').style.display = 'none';
-  setStatus('thinking', `Searching for "${jobTitle}" at "${company}"...`);
-  lastSearch = { company, jobTitle };
-
-  try {
-    const res = await fetch('/.netlify/functions/apollo', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ company, jobTitle })
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(data.error || 'Server error');
-
-    const people = data.people || [];
-
-    if (people.length === 0) {
-      document.getElementById('peopleList').innerHTML = `
-        <div class="no-results">
-          <h3>No results found</h3>
-          <p>Apollo couldn't find <strong>${jobTitle}</strong> at <strong>${company}</strong>.</p>
-          <ul>
-            <li>Try a broader title e.g. "Sales" instead of "VP of Sales"</li>
-            <li>Check the company name spelling</li>
-            <li>Try just the department e.g. "Operations"</li>
-          </ul>
-        </div>`;
-      document.getElementById('resultsHeader').classList.add('show');
-      document.getElementById('resultsTitle').textContent = 'No results';
-      document.getElementById('resultsCount').textContent = '0 people';
-      setStatus('warning', 'No results — try broader search terms');
-      document.getElementById('tips').style.display = 'block';
-      return;
-    }
-
-    allPeople = people;
-    renderPeople(people, company, jobTitle);
-    setStatus('done', `Found ${people.length} people matching "${jobTitle}" at ${company}`);
-    document.getElementById('resultsHeader').classList.add('show');
-    document.getElementById('resultsTitle').textContent = `${jobTitle} at ${company}`;
-    document.getElementById('resultsCount').textContent = people.length + ' people';
-
-  } catch (err) {
-    setStatus('error', 'Error: ' + (err?.message || 'Something went wrong'));
-    console.error(err);
-    document.getElementById('tips').style.display = 'block';
-  } finally {
-    btn.disabled = false;
-    document.getElementById('searchBtnTxt').textContent = 'Find People';
-  }
-}
-
-function renderPeople(people, company, jobTitle) {
-  const list = document.getElementById('peopleList');
-  list.innerHTML = '';
-  people.forEach((p) => {
-    const card = document.createElement('div');
-    card.className = 'person-card';
-    const color = avatarColor(p.name);
-    card.innerHTML = `
-      <div class="person-avatar" style="background:${color}">${initials(p.name)}</div>
-      <div class="person-info">
-        <div class="person-name">${p.name}</div>
-        <div class="person-title">${p.title}</div>
-        <div class="person-tags">
-          ${p.email ? `<span class="person-tag tag-email">${p.email}</span>` : `<span class="person-tag tag-noemail">Email not available</span>`}
-          <span class="person-tag tag-company">${p.company}</span>
-          ${p.location ? `<span class="person-tag tag-location">${p.location}</span>` : ''}
-        </div>
+<!-- SIGNALS -->
+<section class="signals-section">
+  <div>
+    <div class="section-label">Signals We Track</div>
+    <div class="section-h2">We know who's ready before you call.</div>
+    <div class="section-sub">Driftflow tracks the signals that actually predict buying intent.</div>
+    <div class="signals-list">
+      <div class="signal-card">
+        <div class="signal-card-title">Engagement</div>
+        <div class="signal-card-desc">Active interaction with your content and outreach across channels — email opens, clicks, LinkedIn DMs, website visits.</div>
       </div>
-      <div class="person-actions">
-        ${p.email ? `<button class="copy-btn" onclick="copyAndFlash(this,'${p.email}')">Copy Email</button>` : ''}
-        ${p.linkedin ? `<button class="copy-btn linkedin" onclick="window.open('${p.linkedin}','_blank')">LinkedIn</button>` : ''}
-        <button class="copy-btn" onclick="copyAndFlash(this,'${p.name}')">Copy Name</button>
-      </div>`;
-    list.appendChild(card);
-  });
-}
+      <div class="signal-card">
+        <div class="signal-card-title">Intent</div>
+        <div class="signal-card-desc">Behavioral and organizational changes indicating readiness to buy now — funding rounds, hiring signals, leadership changes.</div>
+      </div>
+      <div class="signal-card">
+        <div class="signal-card-title">Fitment</div>
+        <div class="signal-card-desc">B2B companies, 50–1000 employees, doing outbound without internal ops teams — matched to your exact ICP.</div>
+      </div>
+      <div class="signal-card">
+        <div class="signal-card-title">Infrastructure</div>
+        <div class="signal-card-desc">Email responses, website clicks, ad views, LinkedIn DM clicks, site behaviour, and more — all tracked automatically.</div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="signals-right-title">Give your SDRs a Driftflow.</div>
+    <div class="signals-right-sub">Stop asking your team to compensate for bad systems. Let AI handle the research so humans can do what they do best — build relationships and close deals.</div>
+    <div class="signal-metrics">
+      <div class="smetric"><div class="smetric-num">95%</div><div class="smetric-label">Reduction in manual prospecting</div></div>
+      <div class="smetric"><div class="smetric-num">20%</div><div class="smetric-label">Increase in SQLs in 3 months</div></div>
+      <div class="smetric"><div class="smetric-num">3×</div><div class="smetric-label">More meetings per SDR</div></div>
+      <div class="smetric"><div class="smetric-num">48h</div><div class="smetric-label">To first warm leads</div></div>
+    </div>
+  </div>
+</section>
 
-function copyAndFlash(btn, text) {
-  navigator.clipboard.writeText(text);
-  const orig = btn.textContent;
-  btn.textContent = 'Copied!';
-  btn.style.borderColor = 'var(--green)';
-  btn.style.color = 'var(--green)';
-  setTimeout(() => { btn.textContent = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 1500);
-}
+<!-- OUTCOMES -->
+<div class="outcomes">
+  <div class="outcomes-inner">
+    <div class="section-label">Outcomes</div>
+    <div class="section-h2">What outbound teams usually see</div>
+    <div class="outcomes-grid">
+      <div class="outcome-card">
+        <div class="outcome-check"><svg viewBox="0 0 14 14"><polyline points="2 7 6 11 12 3"/></svg></div>
+        <div class="outcome-text">95% reduction in manual prospecting time</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-check"><svg viewBox="0 0 14 14"><polyline points="2 7 6 11 12 3"/></svg></div>
+        <div class="outcome-text">20% increase in SQLs within 3 months</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-check"><svg viewBox="0 0 14 14"><polyline points="2 7 6 11 12 3"/></svg></div>
+        <div class="outcome-text">20% increase in call-to-demo conversion ratio</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-check"><svg viewBox="0 0 14 14"><polyline points="2 7 6 11 12 3"/></svg></div>
+        <div class="outcome-text">SDRs spend 80% more time on actual calls</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-check"><svg viewBox="0 0 14 14"><polyline points="2 7 6 11 12 3"/></svg></div>
+        <div class="outcome-text">Ready-to-call leads delivered in under 48 hours</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-check"><svg viewBox="0 0 14 14"><polyline points="2 7 6 11 12 3"/></svg></div>
+        <div class="outcome-text">Zero cold calls — every lead already warmed up</div>
+      </div>
+    </div>
+  </div>
+</div>
 
-function exportCSV() {
-  if (!allPeople.length) return;
-  const rows = [['Name','Title','Company','Email','Location','LinkedIn']];
-  allPeople.forEach(p => rows.push([p.name, p.title, p.company, p.email||'', p.location||'', p.linkedin||'']));
-  const csv = rows.map(r => r.map(c => '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download = `${lastSearch.company}_${lastSearch.jobTitle}.csv`.replace(/\s+/g,'_');
-  a.click();
-}
+<!-- HOW IT WORKS / TIMELINE -->
+<section class="timeline" id="how-it-works">
+  <div class="section-label">Going Live</div>
+  <div class="section-h2">From kickoff to calling better leads in two weeks.</div>
+  <div class="timeline-grid">
+    <div class="timeline-item">
+      <div class="timeline-line"></div>
+      <div class="timeline-week">Week 1</div>
+      <div class="timeline-title">Align goals and stack</div>
+      <div class="timeline-desc">We learn your ICP, your product, and your current stack. Then we build and test the first outreach capability.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-line"></div>
+      <div class="timeline-week">Week 2</div>
+      <div class="timeline-title">First leads delivered</div>
+      <div class="timeline-desc">We deploy the first workflow and connect to your CRM and Slack. Warm leads start arriving. Your SDRs start calling.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-line"></div>
+      <div class="timeline-week">Week 3</div>
+      <div class="timeline-title">Pipeline starts lifting</div>
+      <div class="timeline-desc">Reps see cleaner priorities and richer context. Meetings begin to increase. Scores improve with every call.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-line"></div>
+      <div class="timeline-week">Week 4</div>
+      <div class="timeline-title">Scale and optimise</div>
+      <div class="timeline-desc">We add the next capability, deployed faster than the first. Your pipeline keeps improving week on week.</div>
+    </div>
+  </div>
+</section>
 
-document.addEventListener('DOMContentLoaded', () => {
-  ['company','jobTitle'].forEach(id => {
-    document.getElementById(id).addEventListener('keydown', e => { if(e.key==='Enter') findPeople(); });
-  });
-});
-</script>
-</body>
-</html>
+<!-- FAQ -->
+<section class="faq" id="faq">
+  <div class="section-label" style="text-align:center;">Common Questions</div>
+  <div class="section-h2" style="text-align:center;">Frequently Asked Questions</div>
+  <div class="faq-list">
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How does Driftflow measure success?<div class="faq-chevron"><svg viewBox="0 0 20 20"><path d="M5 7l5 5 5-5"/></svg></div></div>
+      <div class="faq-a">We measure success by the number of warm leads delivered, meetings booked, and pipeline generated. You'll see a clear weekly report showing exactly what was found, emailed, warmed up, and handed over — with scores for every lead.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Can't we just hire more SDRs?<div class="faq-chevron"><svg viewBox="0 0 20 20"><path d="M5 7l5 5 5-5"/></svg></div></div>
+      <div class="faq-a">You could. A junior SDR costs €40,000-60,000/year and spends 80% of their time on research — not calls. Driftflow does all that research automatically for a fraction of the cost, so your existing SDRs can focus entirely on closing.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">I'm unsure where to start with AI SDRs.<div class="faq-chevron"><svg viewBox="0 0 20 20"><path d="M5 7l5 5 5-5"/></svg></div></div>
+      <div class="faq-a">Start with a free trial. We'll find 20 warm leads for your business in the first week at no cost. You'll see exactly how it works before committing to anything.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What is outbound orchestration?<div class="faq-chevron"><svg viewBox="0 0 20 20"><path d="M5 7l5 5 5-5"/></svg></div></div>
+      <div class="faq-a">Outbound orchestration is connecting signals, data, channels and tasks into one flow. A good signal becomes a scored account, then a clear SDR task with enough context to act — all automatically, without manual work.</div>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What if leads don't reply?<div class="faq-chevron"><svg viewBox="0 0 20 20"><path d="M5 7l5 5 5-5"/></svg></div></div>
+      <div class="faq-a">We only hand over leads who have already shown interest — opened emails, clicked links, or triggered buying signals. Your SDR never calls cold. If a batch underperforms, we top it up with additional leads at no extra cost.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section" id="cta">
+  <div class="cta-logo">
+    <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
+      <polygon points="50,5 90,27 90,73 50,95 10,73 10,27" fill="none" stroke="white" stroke-width="4"/>
+      <line x1="50" y1="5" x2="50" y2="95" stroke="white" stroke-width="2"/>
+      <line x1="10" y1="27" x2="90" y2="73" stroke="white" stroke-width="2"/>
+      <line x1="90" y1="27" x2="10" y2="73" stroke="white" stroke-width="2"/>
+      <line x1="50" y1="5" x2="10" y2="73" stroke="white" stroke-width="1.5"/>
+      <line x1="50" y1="5" x2="90" y2="73" stroke="white" stroke-width="1.5"/>
+      <line x1="10" y1="27" x2="50" y2="95" stroke="white" stroke-width="1.5"/>
+      <line x1="90" y1="27" x2="50" y2="95" stroke="white" stroke-width="1.5"/>
+      <line x1="10" y1="27" x2="90" y2="27" stroke="white" stroke-width="1.5"/>
+      <line x1="10" y1="73" x2="90" y2="73" stroke="white" stroke-width="1.5"/>
+    </svg>
+    <span class="cta-logo-name">driftflow</span>
+  </div>
+  <div class="cta-h2">Give your SDRs a Driftflow.</div>
+  <div class="cta-sub">Start your free week today. No credit card. Just results.</div>
+  <div class="cta-btns">
+    <a href="/demo" class="btn-cta-orange">Book a Demo</a>
+    <a href="mailto:support@driftflow.info" class="btn-cta-outline">Contact us</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">© 2025 Driftflow. driftflow.info</div>
+    <div class="footer-links">
+      <a href="#what-we-do">AI SDRs</a>
+      <a href="#how-it-works">How it Works</a>
+      <a href="#faq">FAQ</a>
+      <a href="/cdn-cgi/l/email-protection#c2aaa7aeaead82a6b0aba4b6a4aeadb5ecabaca4ad">Contact</a>
+    </div>
+    <div class="footer-left"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="34474144445b46407450465d524052585b431a5d5a525b">[email&#160;protected]</a></div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function toggleFaq(item){
+  const open = item.classList.contains('open');
+  document.quer
