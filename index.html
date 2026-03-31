@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HyperKloud — People Finder</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800&family=Bricolage+Grotesque:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05060a;--surface:#0d0f17;--surface2:#141720;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.12);
+  --text:#eeeef0;--muted:#6b6e82;--dim:#3a3d52;
+  --cyan:#00d4ff;--cyan-d:rgba(0,212,255,0.1);--cyan-g:rgba(0,212,255,0.25);
+  --green:#00e5a0;--green-d:rgba(0,229,160,0.1);
+  --amber:#ffb347;--amber-d:rgba(255,179,71,0.1);
+  --red:#ff4d6a;--red-d:rgba(255,77,106,0.1);
+  --display:'Cabinet Grotesk',system-ui,sans-serif;
+  --body:'Bricolage Grotesque',system-ui,sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.6;min-height:100vh;}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;gap:12px;}
+.logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--cyan),#0088ff);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#000;font-family:var(--display);}
+.logo-name{font-family:var(--display);font-size:17px;font-weight:800;letter-spacing:-0.02em;}
+.logo-name span{color:var(--cyan);}
+.badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;font-family:var(--display);background:rgba(255,100,50,0.15);border:1px solid rgba(255,100,50,0.3);color:#ff6432;margin-left:8px;}
+.page{max-width:780px;margin:0 auto;padding:48px 24px 80px;}
+.hero{text-align:center;margin-bottom:40px;}
+.hero h1{font-family:var(--display);font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:10px;}
+.hero h1 span{color:var(--cyan);}
+.hero p{font-size:15px;color:var(--muted);font-weight:300;}
+.search-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;}
+.search-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.field{display:flex;flex-direction:column;gap:5px;}
+label{font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);}
+input{background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--body);font-size:15px;padding:13px 16px;outline:none;transition:all 0.2s;width:100%;}
+input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px var(--cyan-d);}
+input::placeholder{color:var(--dim);}
+.search-btn{width:100%;padding:15px;background:var(--cyan);border:none;border-radius:10px;color:#000;font-family:var(--display);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.search-btn:hover:not(:disabled){box-shadow:0 0 32px var(--cyan-g);transform:translateY(-1px);}
+.search-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.status{display:none;align-items:center;gap:8px;padding:12px 16px;border-radius:8px;font-size:13px;margin-top:14px;}
+.status.show{display:flex;}
+.status.thinking{background:var(--cyan-d);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);}
+.status.done{background:var(--green-d);border:1px solid rgba(0,229,160,0.2);color:var(--green);}
+.status.error{background:var(--red-d);border:1px solid rgba(255,77,106,0.2);color:var(--red);}
+.status.warning{background:var(--amber-d);border:1px solid rgba(255,179,71,0.2);color:var(--amber);}
+.spinner{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.results-header{display:none;align-items:center;gap:12px;margin-bottom:16px;}
+.results-header.show{display:flex;}
+.results-title{font-family:var(--display);font-size:16px;font-weight:700;}
+.results-count{background:var(--cyan-d);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);font-size:12px;font-weight:600;padding:3px 12px;border-radius:20px;font-family:var(--display);}
+.export-btn{margin-left:auto;background:var(--surface);border:1px solid var(--border2);border-radius:7px;color:var(--muted);cursor:pointer;font-family:var(--display);font-size:12px;font-weight:600;padding:7px 14px;transition:all 0.15s;}
+.export-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.people-list{display:flex;flex-direction:column;gap:12px;}
+.person-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;display:flex;align-items:center;gap:18px;transition:border-color 0.2s;}
+.person-card:hover{border-color:var(--border2);}
+.person-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:16px;font-weight:700;color:#fff;flex-shrink:0;}
+.person-info{flex:1;min-width:0;}
+.person-name{font-family:var(--display);font-size:15px;font-weight:700;margin-bottom:2px;}
+.person-title{font-size:13px;color:var(--muted);margin-bottom:6px;}
+.person-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.person-tag{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;font-family:var(--display);}
+.tag-email{background:var(--green-d);border:1px solid rgba(0,229,160,0.2);color:var(--green);}
+.tag-company{background:var(--cyan-d);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);}
+.tag-location{background:var(--surface2);border:1px solid var(--border2);color:var(--muted);}
+.tag-noemail{background:var(--amber-d);border:1px solid rgba(255,179,71,0.2);color:var(--amber);}
+.person-actions{display:flex;flex-direction:column;gap:6px;flex-shrink:0;}
+.copy-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:7px;color:var(--muted);cursor:pointer;font-family:var(--display);font-size:11px;font-weight:600;padding:6px 12px;transition:all 0.15s;white-space:nowrap;}
+.copy-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.copy-btn.linkedin{border-color:rgba(0,119,181,0.3);color:#0077b5;}
+.copy-btn.linkedin:hover{background:rgba(0,119,181,0.1);}
+.no-results{text-align:center;padding:48px 24px;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:12px;}
+.no-results h3{font-family:var(--display);font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;}
+.no-results ul{text-align:left;display:inline-block;margin-top:12px;font-size:13px;line-height:2;}
+.tips{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-top:20px;}
+.tips-title{font-family:var(--display);font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;}
+.tips-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.tip{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;cursor:pointer;transition:border-color 0.15s;}
+.tip:hover{border-color:var(--cyan);}
+.tip-company{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;font-family:var(--display);}
+.tip-title{font-size:12px;color:var(--muted);}
+@media(max-width:600px){
+  .search-row{grid-template-columns:1fr;}
+  .person-card{flex-wrap:wrap;}
+  .person-actions{flex-direction:row;width:100%;}
+  .tips-grid{grid-template-columns:1fr;}
+  .page{padding:28px 14px 60px;}
+  .header{padding:14px 16px;}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo-icon">HK</div>
+  <div class="logo-name">Hyper<span>Kloud</span></div>
+  <span class="badge">People Finder</span>
+</div>
+<div class="page">
+  <div class="hero">
+    <h1>Find anyone at any<br><span>company instantly</span></h1>
+    <p>Type a company name + job title → get real names, emails, and LinkedIn profiles</p>
+  </div>
+  <div class="search-box">
+    <div class="search-row">
+      <div class="field">
+        <label>Company Name *</label>
+        <input type="text" id="company" placeholder="e.g. Disprz, Notion, Chargebee" />
+      </div>
+      <div class="field">
+        <label>Job Title *</label>
+        <input type="text" id="jobTitle" placeholder="e.g. Revenue Operations, VP Sales" />
+      </div>
+    </div>
+    <button class="search-btn" id="searchBtn" onclick="findPeople()">
+      <span id="searchBtnTxt">Find People</span>
+    </button>
+    <div class="status" id="status">
+      <div class="spinner" id="spinner"></div>
+      <span id="statusTxt"></span>
+    </div>
+  </div>
+  <div class="results-header" id="resultsHeader">
+    <div class="results-title" id="resultsTitle">Results</div>
+    <div class="results-count" id="resultsCount">0 people</div>
+    <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+  </div>
+  <div class="people-list" id="peopleList"></div>
+  <div class="tips" id="tips">
+    <div class="tips-title">Try these examples</div>
+    <div class="tips-grid">
+      <div class="tip" onclick="prefill('Disprz','Revenue Operations')">
+        <div class="tip-company">Disprz</div>
+        <div class="tip-title">Revenue Operations</div>
+      </div>
+      <div class="tip" onclick="prefill('Chargebee','VP of Sales')">
+        <div class="tip-company">Chargebee</div>
+        <div class="tip-title">VP of Sales</div>
+      </div>
+      <div class="tip" onclick="prefill('Freshworks','Head of Marketing')">
+        <div class="tip-company">Freshworks</div>
+        <div class="tip-title">Head of Marketing</div>
+      </div>
+      <div class="tip" onclick="prefill('Razorpay','Business Development')">
+        <div class="tip-company">Razorpay</div>
+        <div class="tip-title">Business Development</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+let allPeople = [];
+let lastSearch = {};
+
+function prefill(company, title) {
+  document.getElementById('company').value = company;
+  document.getElementById('jobTitle').value = title;
+  findPeople();
+}
+
+function setStatus(type, text) {
+  const el = document.getElementById('status');
+  el.className = 'status show ' + type;
+  document.getElementById('statusTxt').textContent = text;
+  document.getElementById('spinner').style.display = type === 'thinking' ? 'block' : 'none';
+}
+
+function initials(name) {
+  return name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+}
+
+function avatarColor(name) {
+  const colors = ['#00d4ff','#00e5a0','#ffb347','#a78bfa','#ff6432','#ff4d6a'];
+  return colors[name.charCodeAt(0) % colors.length];
+}
+
+async function findPeople() {
+  const company = document.getElementById('company').value.trim();
+  const jobTitle = document.getElementById('jobTitle').value.trim();
+  if (!company || !jobTitle) {
+    setStatus('error', 'Please enter both company name and job title.');
+    return;
+  }
+  const btn = document.getElementById('searchBtn');
+  btn.disabled = true;
+  document.getElementById('searchBtnTxt').textContent = 'Searching...';
+  document.getElementById('peopleList').innerHTML = '';
+  document.getElementById('resultsHeader').classList.remove('show');
+  document.getElementById('tips').style.display = 'none';
+  setStatus('thinking', `Searching for "${jobTitle}" at "${company}"...`);
+  lastSearch = { company, jobTitle };
+
+  try {
+    const res = await fetch('/.netlify/functions/apollo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ company, jobTitle })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.error || 'Server error');
+
+    const people = data.people || [];
+
+    if (people.length === 0) {
+      document.getElementById('peopleList').innerHTML = `
+        <div class="no-results">
+          <h3>No results found</h3>
+          <p>Apollo couldn't find <strong>${jobTitle}</strong> at <strong>${company}</strong>.</p>
+          <ul>
+            <li>Try a broader title e.g. "Sales" instead of "VP of Sales"</li>
+            <li>Check the company name spelling</li>
+            <li>Try just the department e.g. "Operations"</li>
+          </ul>
+        </div>`;
+      document.getElementById('resultsHeader').classList.add('show');
+      document.getElementById('resultsTitle').textContent = 'No results';
+      document.getElementById('resultsCount').textContent = '0 people';
+      setStatus('warning', 'No results — try broader search terms');
+      document.getElementById('tips').style.display = 'block';
+      return;
+    }
+
+    allPeople = people;
+    renderPeople(people, company, jobTitle);
+    setStatus('done', `Found ${people.length} people matching "${jobTitle}" at ${company}`);
+    document.getElementById('resultsHeader').classList.add('show');
+    document.getElementById('resultsTitle').textContent = `${jobTitle} at ${company}`;
+    document.getElementById('resultsCount').textContent = people.length + ' people';
+
+  } catch (err) {
+    setStatus('error', 'Error: ' + (err?.message || 'Something went wrong'));
+    console.error(err);
+    document.getElementById('tips').style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    document.getElementById('searchBtnTxt').textContent = 'Find People';
+  }
+}
+
+function renderPeople(people, company, jobTitle) {
+  const list = document.getElementById('peopleList');
+  list.innerHTML = '';
+  people.forEach((p) => {
+    const card = document.createElement('div');
+    card.className = 'person-card';
+    const color = avatarColor(p.name);
+    card.innerHTML = `
+      <div class="person-avatar" style="background:${color}">${initials(p.name)}</div>
+      <div class="person-info">
+        <div class="person-name">${p.name}</div>
+        <div class="person-title">${p.title}</div>
+        <div class="person-tags">
+          ${p.email ? `<span class="person-tag tag-email">${p.email}</span>` : `<span class="person-tag tag-noemail">Email not available</span>`}
+          <span class="person-tag tag-company">${p.company}</span>
+          ${p.location ? `<span class="person-tag tag-location">${p.location}</span>` : ''}
+        </div>
+      </div>
+      <div class="person-actions">
+        ${p.email ? `<button class="copy-btn" onclick="copyAndFlash(this,'${p.email}')">Copy Email</button>` : ''}
+        ${p.linkedin ? `<button class="copy-btn linkedin" onclick="window.open('${p.linkedin}','_blank')">LinkedIn</button>` : ''}
+        <button class="copy-btn" onclick="copyAndFlash(this,'${p.name}')">Copy Name</button>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+function copyAndFlash(btn, text) {
+  navigator.clipboard.writeText(text);
+  const orig = btn.textContent;
+  btn.textContent = 'Copied!';
+  btn.style.borderColor = 'var(--green)';
+  btn.style.color = 'var(--green)';
+  setTimeout(() => { btn.textContent = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 1500);
+}
+
+function exportCSV() {
+  if (!allPeople.length) return;
+  const rows = [['Name','Title','Company','Email','Location','LinkedIn']];
+  allPeople.forEach(p => rows.push([p.name, p.title, p.company, p.email||'', p.location||'', p.linkedin||'']));
+  const csv = rows.map(r => r.map(c => '"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = `${lastSearch.company}_${lastSearch.jobTitle}.csv`.replace(/\s+/g,'_');
+  a.click();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  ['company','jobTitle'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => { if(e.key==='Enter') findPeople(); });
+  });
+});
+</script>
+</body>
+</html>
