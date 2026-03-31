@@ -1,17 +1,3 @@
 [build]
   publish = "."
   functions = "netlify/functions"
-
-[[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-```
-
-4. Click **"Commit new file"**
-
-Your root should then show:
-```
-netlify/        ← folder
-index.html      ← file  
-netlify.toml    ← file
