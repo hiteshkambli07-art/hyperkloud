@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Driftflow</title>
+<meta name="description" content="Book a free 20-minute call with Driftflow. No pitch — just an honest conversation about your outbound and RevOps setup.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#f5f3ef;--bg2:#eceae4;--white:#ffffff;--ink:#1a1814;--ink2:#3d3a34;--ink3:#7a766e;--ink4:#a8a49c;--orange:#e8571a;--orange2:#f07040;--green:#1a9c5b;--border:#dedad2;--border2:#ccc8be;--sans:'Inter',system-ui,sans-serif;--radius:14px;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;overflow-x:hidden;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;align-items:center;padding:0 40px;background:rgba(245,243,239,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-name{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:-0.03em;}
+.nav-links{display:flex;align-items:center;gap:28px;margin-left:40px;}
+.nav-links a{font-size:14px;font-weight:500;color:var(--ink3);text-decoration:none;transition:color 0.15s;}
+.nav-links a:hover,.nav-links a.active{color:var(--ink);}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.btn-sm{font-size:13px;font-weight:600;padding:8px 18px;border-radius:8px;cursor:pointer;border:none;font-family:var(--sans);transition:all 0.15s;text-decoration:none;display:inline-flex;align-items:center;}
+.btn-ghost{background:transparent;color:var(--ink2);border:1px solid var(--border2);}
+.btn-ghost:hover{border-color:var(--ink3);}
+.btn-dark{background:var(--ink);color:white;}
+.btn-dark:hover{background:#2d2a24;}
+.section-label{font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px;}
+.section-h2{font-size:clamp(26px,3.5vw,44px);font-weight:700;letter-spacing:-0.03em;line-height:1.1;color:var(--ink);margin-bottom:14px;}
+.contact-wrap{min-height:100vh;padding:120px 40px 80px;max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+.contact-left{}
+.contact-left p{font-size:16px;color:var(--ink3);line-height:1.7;margin-top:12px;margin-bottom:36px;}
+.what-happens{margin-top:40px;}
+.what-happens-title{font-size:12px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:20px;}
+.step-list{display:flex;flex-direction:column;gap:16px;}
+.step-item{display:flex;align-items:flex-start;gap:16px;}
+.step-dot{width:28px;height:28px;border-radius:50%;background:var(--orange);color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.step-text{font-size:14px;color:var(--ink2);line-height:1.6;}
+.step-text strong{color:var(--ink);font-weight:600;}
+.contact-right{}
+.calendly-box{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:32px;margin-bottom:20px;}
+.calendly-box h3{font-size:18px;font-weight:600;color:var(--ink);margin-bottom:6px;letter-spacing:-0.02em;}
+.calendly-box p{font-size:14px;color:var(--ink3);margin-bottom:24px;line-height:1.6;}
+.btn-orange-lg{display:block;width:100%;text-align:center;background:var(--orange);color:white;font-family:var(--sans);font-size:15px;font-weight:600;padding:14px 28px;border-radius:10px;border:none;cursor:pointer;text-decoration:none;transition:all 0.2s;}
+.btn-orange-lg:hover{background:#d14d14;transform:translateY(-1px);}
+.or-divider{text-align:center;font-size:13px;color:var(--ink4);margin:16px 0;position:relative;}
+.or-divider::before,.or-divider::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:var(--border);}
+.or-divider::before{left:0;}
+.or-divider::after{right:0;}
+.email-box{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:24px;text-align:center;}
+.email-box p{font-size:14px;color:var(--ink3);margin-bottom:12px;}
+.email-box a{font-size:15px;font-weight:600;color:var(--orange);text-decoration:none;}
+.email-box a:hover{text-decoration:underline;}
+.guarantee{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-top:16px;display:flex;align-items:flex-start;gap:14px;}
+.guarantee-icon{font-size:20px;flex-shrink:0;}
+.guarantee-text{font-size:13px;color:var(--ink3);line-height:1.6;}
+.guarantee-text strong{color:var(--ink);font-weight:600;}
+footer{background:var(--ink);border-top:1px solid rgba(255,255,255,0.07);padding:32px 40px;}
+.footer-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-left{font-size:13px;color:rgba(255,255,255,0.3);}
+.footer-links{display:flex;gap:20px;}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.35);text-decoration:none;transition:color 0.15s;}
+.footer-links a:hover{color:rgba(255,255,255,0.7);}
+@media(max-width:768px){
+  nav{padding:0 20px;}.nav-links{display:none;}
+  .contact-wrap{grid-template-columns:1fr;gap:40px;padding:100px 20px 60px;}
+  footer{padding:24px 20px;}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none"><polygon points="50,5 90,27 90,73 50,95 10,73 10,27" fill="none" stroke="#1a1814" stroke-width="4"/><line x1="50" y1="5" x2="50" y2="95" stroke="#1a1814" stroke-width="2"/><line x1="10" y1="27" x2="90" y2="73" stroke="#1a1814" stroke-width="2"/><line x1="90" y1="27" x2="10" y2="73" stroke="#1a1814" stroke-width="2"/><line x1="50" y1="5" x2="10" y2="73" stroke="#1a1814" stroke-width="1.5"/><line x1="50" y1="5" x2="90" y2="73" stroke="#1a1814" stroke-width="1.5"/><line x1="10" y1="27" x2="50" y2="95" stroke="#1a1814" stroke-width="1.5"/><line x1="90" y1="27" x2="50" y2="95" stroke="#1a1814" stroke-width="1.5"/></svg>
+    <span class="nav-logo-name">driftflow</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="contact.html" class="active">Contact</a>
+  </div>
+  <div class="nav-right">
+    <a href="contact.html" class="btn-sm btn-ghost">Contact</a>
+    <a href="https://calendly.com/hiteshkambli07/30min" class="btn-sm btn-dark">Book a Call</a>
+  </div>
+</nav>
+
+<div class="contact-wrap">
+  <div class="contact-left">
+    <div class="section-label">Get in Touch</div>
+    <div class="section-h2">Let's talk about your revenue system.</div>
+    <p>Book a free 20-minute call. No pitch, no pressure. I'll ask about your current outbound setup, your ICP, and where you want to get to — then give you an honest view of what I'd build and whether it makes sense.</p>
+
+    <div class="what-happens">
+      <div class="what-happens-title">What happens on the call</div>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-dot">1</div>
+          <div class="step-text"><strong>You tell me where you are.</strong> Current outbound setup, team size, what's working, what isn't.</div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot">2</div>
+          <div class="step-text"><strong>I map out what I'd build.</strong> Specific to your product, ICP, and stage — not a generic pitch.</div>
+        </div>
+        <div class="step-item">
+          <div class="step-dot">3</div>
+          <div class="step-text"><strong>You decide.</strong> If it makes sense, we start. If not, you leave with a clear picture of what your outbound needs.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-right">
+    <div class="calendly-box">
+      <h3>Book a free 20-minute call</h3>
+      <p>Pick a time that works for you. Available Monday to Friday, Berlin time.</p>
+      <a href="https://calendly.com/hiteshkambli07/30min" class="btn-orange-lg" target="_blank">Open Calendly →</a>
+    </div>
+
+    <div class="or-divider">or</div>
+
+    <div class="email-box">
+      <p>Prefer to send a message first?</p>
+      <a href="mailto:hitesh@getdriftflow.com">hitesh@getdriftflow.com</a>
+    </div>
+
+    <div class="guarantee">
+      <div class="guarantee-icon">✓</div>
+      <div class="guarantee-text"><strong>No hard sell.</strong> If Driftflow isn't the right fit for where you are right now, I'll tell you honestly — and point you toward what would actually help.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">© 2025 Driftflow · hitesh@getdriftflow.com</div>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="footer-left"><a href="mailto:hitesh@getdriftflow.com" style="color:rgba(255,255,255,0.3);text-decoration:none;">hitesh@getdriftflow.com</a></div>
+  </div>
+</footer>
+</body>
+</html>
